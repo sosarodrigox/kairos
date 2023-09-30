@@ -61,11 +61,11 @@ with tab1:
             options=["To-The-Point", "Concise", "Detailed"],
         )
         if output_size == "To-The-Point":
-            out_token = 50
+            out_token = 100
         elif output_size == "Concise":
-            out_token = 128
+            out_token = 250
         else:
-            out_token = 516
+            out_token = 500
 
     with col2:
         # Create Radio Buttons
@@ -86,11 +86,15 @@ with tab1:
             with st.spinner("Wait for it..."):
                 # Revisar los gains con IA
                 prompt_edit = (
-                    "Estoy armando un lienzo de propuesta de valor canvas de A. Osterwalder, y estoy en la parte de las ganancias del cliente. Tengo esta lista de ganancias: "
+                    "Estoy creando un lienzo de propuesta de valor canvas de A. Osterwalder, sección cliente, apartado ganancias del cliente. Tengo esta lista de ganancias: "
                     + gains_input
                     + ". ¿Qué opinas de esta lista? ¿Agregarías o quitarías algo? Hazme una crítica "
                     + output_review
+                    + " puedes usar hasta "
+                    + str(out_token)
+                    + " palabras."
                 )
+                print(prompt_edit)
                 review = openai.Completion.create(
                     engine="text-davinci-003",
                     prompt=prompt_edit,
