@@ -135,7 +135,7 @@ if selected == "Constumer Segment":
                         f"My understanding of the business context is as follows: "
                         f"I have {business_knowledge.lower()} knowledge of the business domain, and the business is currently at the {business_stage.lower()} stage. "
                         f"I am seeking feedback on this list to refine and optimize the value proposition. "
-                        f"I would appreciate your {output_review.lower()} feedback on the gains and any suggestions to improve. Consider mentioning the most critical gains for the {business_area.lower()} area"
+                        f"I would appreciate your {output_review.lower()} feedback on the gains and any suggestions to improve. Consider mentioning the most critical gains for the {business_area.lower()} area. "
                         f"Please provide me with your {output_size.lower()} feedback, and keep your response within {out_token} words."
                     )
                     print(
@@ -205,7 +205,7 @@ if selected == "Constumer Segment":
                         f"My understanding of the business context is as follows: "
                         f"I have {business_knowledge.lower()} knowledge of the business domain, and the business is currently at the {business_stage.lower()} stage. "
                         f"I am seeking feedback on this list to refine and optimize the value proposition. "
-                        f"I would appreciate your {output_review.lower()} feedback on the jobs and any suggestions to improve. Consider mentioning the most critical jobs for the {business_area.lower()} area"
+                        f"I would appreciate your {output_review.lower()} feedback on the jobs list and any suggestions to improve. Consider mentioning the most critical jobs for the {business_area.lower()} area. "
                         f"Please provide me with your {output_size.lower()} feedback, and keep your response within {out_token} words."
                     )
                     print(
@@ -228,10 +228,80 @@ if selected == "Constumer Segment":
 
                 st.success("Done!")
         else:
-            st.error("Enter at least 3 expected gains or benefits")
+            st.error(
+                "Enter at least 3 expected jobs or tasks that the client needs to solve"
+            )
 
     if menu_costumer_segment == "Pains":
         st.subheader("Constumer Pains:")
         st.text(
             "The negative outcomes, risks, or frustrations that customers experience or fear."
         )
+
+        pains_input = st.text_area(
+            "Enter at least 3 pains or frustrations that the customer needs to resolve:"
+        )
+
+        st.subheader("AI Review:")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            output_size = st.radio(
+                label="What kind of answer do you want?",
+                options=["To-The-Point", "Concise", "Detailed"],
+            )
+            if output_size == "To-The-Point":
+                out_token = 100
+            elif output_size == "Concise":
+                out_token = 250
+            else:
+                out_token = 500
+
+        with col2:
+            output_review = st.radio(
+                label="What kind of feedback do you want?",
+                options=["Constructive", "Destructive"],
+            )
+
+        temp = st.slider(
+            "Randomness or creativity of the text generated",
+            min_value=0.0,
+            max_value=1.0,
+            step=0.2,
+        )
+
+        if len(pains_input) > 10:
+            if st.button("Review with AI", type="primary"):
+                with st.spinner("Wait for it..."):
+                    prompt_edit = (
+                        f"As a business professional focusing on the customer section and customer pains in the Business Value Proposition Canvas by Alexander Osterwalder, I have compiled the following list of costumer pains: {pains_input}. "
+                        f"My understanding of the business context is as follows: "
+                        f"I have {business_knowledge.lower()} knowledge of the business domain, and the business is currently at the {business_stage.lower()} stage. "
+                        f"I am seeking feedback on this list to refine and optimize the value proposition. "
+                        f"I would appreciate your {output_review.lower()} feedback on the pains list and any suggestions to improve. Consider mentioning the most critical pains for the {business_area.lower()} area. "
+                        f"Please provide me with your {output_size.lower()} feedback, and keep your response within {out_token} words."
+                    )
+                    print(
+                        "prompt_edit: "
+                        + prompt_edit
+                        + "// out_token: "
+                        + str(out_token)
+                        + "."
+                    )
+                    review = openai.Completion.create(
+                        engine="text-davinci-003",
+                        prompt=prompt_edit,
+                        max_tokens=out_token,
+                        temperature=temp,
+                    )
+                    print(review)
+
+                    review_ai = review["choices"][0]["text"]
+                    st.info(review_ai)
+
+                st.success("Done!")
+        else:
+            st.error(
+                "Enter at least 3 pains or frustrations that the customer needs to resolve"
+            )
