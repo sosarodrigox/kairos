@@ -70,6 +70,9 @@ if selected == "What is?":
     st.markdown(
         """The AI Value Proposition Canvas is a tool that helps you to design and implement an AI solution. It is based on the Value Proposition Canvas by Alex Osterwalder. """
     )
+
+# Constumer Segment
+############################################################################################################
 if selected == "Constumer Segment":
     st.subheader("Constumer Segment")
     st.markdown(
@@ -280,6 +283,241 @@ if selected == "Constumer Segment":
                         f"I have {business_knowledge.lower()} knowledge of the business domain, and the business is currently at the {business_stage.lower()} stage. "
                         f"I am seeking feedback on this list to refine and optimize the value proposition. "
                         f"I would appreciate your {output_review.lower()} feedback on the pains list and any suggestions to improve. Consider mentioning the most critical pains for the {business_area.lower()} area. "
+                        f"Please provide me with your {output_size.lower()} feedback, and keep your response within {out_token} words."
+                    )
+                    print(
+                        "prompt_edit: "
+                        + prompt_edit
+                        + "// out_token: "
+                        + str(out_token)
+                        + "."
+                    )
+                    review = openai.Completion.create(
+                        engine="text-davinci-003",
+                        prompt=prompt_edit,
+                        max_tokens=out_token,
+                        temperature=temp,
+                    )
+                    print(review)
+
+                    review_ai = review["choices"][0]["text"]
+                    st.info(review_ai)
+
+                st.success("Done!")
+        else:
+            st.error(
+                "Enter at least 3 pains or frustrations that the customer needs to resolve"
+            )
+# Value Proposition Segment
+############################################################################################################
+if selected == "Value Proposition":
+    st.subheader("Value Proposition")
+    st.markdown(
+        """The 'Value Proposition' section outlines the unique benefits and value that your product or service provides to address the specific needs and desires of your target customer segment. It encapsulates the core offering and what sets it apart, showcasing the compelling reasons why customers should choose your solution over others in the market."""
+    )
+
+    menu_value_proposition = option_menu(
+        menu_title=None,
+        options=[
+            "Gain Creators",
+            "Products & Services",
+            "Pains Reliever",
+        ],
+        icons=[
+            "graph-up-arrow",
+            "cart4",
+            "capsule",
+        ],
+        default_index=0,
+        orientation="horizontal",
+    )
+
+    if menu_value_proposition == "Gain Creators":
+        st.subheader("Gain Creators:")
+        st.text(
+            "Enhancing value by delivering benefits and positive outcomes for customers."
+        )
+
+        gain_creators_input = st.text_area("Enter at least 3 gain creators:")
+
+        st.subheader("AI Review:")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            output_size = st.radio(
+                label="What kind of answer do you want?",
+                options=["To-The-Point", "Concise", "Detailed"],
+            )
+            if output_size == "To-The-Point":
+                out_token = 100
+            elif output_size == "Concise":
+                out_token = 250
+            else:
+                out_token = 500
+
+        with col2:
+            output_review = st.radio(
+                label="What kind of feedback do you want?",
+                options=["Constructive", "Destructive"],
+            )
+
+        temp = st.slider(
+            "Randomness or creativity of the text generated",
+            min_value=0.0,
+            max_value=1.0,
+            step=0.2,
+        )
+
+        if len(gain_creators_input) > 10:
+            if st.button("Review with AI", type="primary"):
+                with st.spinner("Wait for it..."):
+                    prompt_edit = (
+                        f"As a business professional focusing on the value proposition section and gain creators in the Business Value Proposition Canvas by Alexander Osterwalder, I have compiled the following list of gain creators: {gain_creators_input}. "
+                        f"My understanding of the business context is as follows: "
+                        f"I have {business_knowledge.lower()} knowledge of the business domain, and the business is currently at the {business_stage.lower()} stage. "
+                        f"I am seeking feedback on this list to refine and optimize the value proposition. "
+                        f"I would appreciate your {output_review.lower()} feedback on the gain creators and any suggestions to improve. Consider mentioning the most critical gain creators for the {business_area.lower()} area. "
+                        f"Please provide me with your {output_size.lower()} feedback, and keep your response within {out_token} words."
+                    )
+                    print(
+                        "prompt_edit: "
+                        + prompt_edit
+                        + "// out_token: "
+                        + str(out_token)
+                        + "."
+                    )
+                    review = openai.Completion.create(
+                        engine="text-davinci-003",
+                        prompt=prompt_edit,
+                        max_tokens=out_token,
+                        temperature=temp,
+                    )
+                    print(review)
+
+                    review_ai = review["choices"][0]["text"]
+                    st.info(review_ai)
+
+                st.success("Done!")
+        else:
+            st.error("Enter at least 3 gain creators")
+
+    if menu_value_proposition == "Products & Services":
+        st.subheader("Products & Services:")
+        st.text("The products and services that create value for the customer.")
+
+        prod_serv_input = st.text_area("Enter at least 3 products or services:")
+
+        st.subheader("AI Review:")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            output_size = st.radio(
+                label="What kind of answer do you want?",
+                options=["To-The-Point", "Concise", "Detailed"],
+            )
+            if output_size == "To-The-Point":
+                out_token = 100
+            elif output_size == "Concise":
+                out_token = 250
+            else:
+                out_token = 500
+
+        with col2:
+            output_review = st.radio(
+                label="What kind of feedback do you want?",
+                options=["Constructive", "Destructive"],
+            )
+
+        temp = st.slider(
+            "Randomness or creativity of the text generated",
+            min_value=0.0,
+            max_value=1.0,
+            step=0.2,
+        )
+
+        if len(prod_serv_input) > 10:
+            if st.button("Review with AI", type="primary"):
+                with st.spinner("Wait for it..."):
+                    prompt_edit = (
+                        f"As a business professional focusing on the value proposition section and products and services in the Business Value Proposition Canvas by Alexander Osterwalder, I have compiled the following list of products and services: {prod_serv_input}. "
+                        f"My understanding of the business context is as follows: "
+                        f"I have {business_knowledge.lower()} knowledge of the business domain, and the business is currently at the {business_stage.lower()} stage. "
+                        f"I am seeking feedback on this list to refine and optimize the value proposition. "
+                        f"I would appreciate your {output_review.lower()} feedback on the products and services and any suggestions to improve. Consider mentioning the most critical products and services for the {business_area.lower()} area. "
+                        f"Please provide me with your {output_size.lower()} feedback, and keep your response within {out_token} words."
+                    )
+                    print(
+                        "prompt_edit: "
+                        + prompt_edit
+                        + "// out_token: "
+                        + str(out_token)
+                        + "."
+                    )
+                    review = openai.Completion.create(
+                        engine="text-davinci-003",
+                        prompt=prompt_edit,
+                        max_tokens=out_token,
+                        temperature=temp,
+                    )
+                    print(review)
+
+                    review_ai = review["choices"][0]["text"]
+                    st.info(review_ai)
+
+                st.success("Done!")
+        else:
+            st.error("Enter at least 3 products or services")
+
+    if menu_value_proposition == "Pains Reliever":
+        st.subheader("Constumer Pains:")
+        st.text(
+            "The negative outcomes, risks, or frustrations that customers experience or fear."
+        )
+
+        pains_input = st.text_area(
+            "Enter at least 3 pains or frustrations that the customer needs to resolve:"
+        )
+
+        st.subheader("AI Review:")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            output_size = st.radio(
+                label="What kind of answer do you want?",
+                options=["To-The-Point", "Concise", "Detailed"],
+            )
+            if output_size == "To-The-Point":
+                out_token = 100
+            elif output_size == "Concise":
+                out_token = 250
+            else:
+                out_token = 500
+
+        with col2:
+            output_review = st.radio(
+                label="What kind of feedback do you want?",
+                options=["Constructive", "Destructive"],
+            )
+
+        temp = st.slider(
+            "Randomness or creativity of the text generated",
+            min_value=0.0,
+            max_value=1.0,
+            step=0.2,
+        )
+
+        if len(pains_input) > 10:
+            if st.button("Review with AI", type="primary"):
+                with st.spinner("Wait for it..."):
+                    prompt_edit = (
+                        f"As a business professional focusing on the value proposition section and gain creators in the Business Value Proposition Canvas by Alexander Osterwalder, I have compiled the following list of gain creators: {gain_creators_input}. "
+                        f"My understanding of the business context is as follows: "
+                        f"I have {business_knowledge.lower()} knowledge of the business domain, and the business is currently at the {business_stage.lower()} stage. "
+                        f"I am seeking feedback on this list to refine and optimize the value proposition. "
+                        f"I would appreciate your {output_review.lower()} feedback on the gain creators and any suggestions to improve. Consider mentioning the most critical gain creators for the {business_area.lower()} area. "
                         f"Please provide me with your {output_size.lower()} feedback, and keep your response within {out_token} words."
                     )
                     print(
