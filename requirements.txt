@@ -1,4 +1,4 @@
 openai==0.28.1
 python-dotenv==1.0.0
-streamlit
-streamlit_option_menu
+streamlit==1.27.0
+streamlit_option_menu==0.3.6
