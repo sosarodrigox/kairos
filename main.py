@@ -67,9 +67,14 @@ with st.sidebar:
 if selected == "What is?":
     st.title("The AI Value Proposition Canvas")
     st.subheader("What is?")
-    st.markdown(
-        """The AI Value Proposition Canvas is a tool that helps you to design and implement an AI solution. It is based on the Value Proposition Canvas by Alex Osterwalder. """
+    st.image(
+        "https://www.iiba.org/contentassets/6213b737b4c9428e9fe24cf5cb61a138/value-proposition.png",
+        use_column_width=True,
     )
+    st.markdown(
+        """The AI Value Proposition Canvas is a powerful tool designed to assist in the creation and deployment of AI solutions. Drawing inspiration from the renowned Value Proposition Canvas by Alex Osterwalder, this specialized framework focuses on harnessing the potential of artificial intelligence. The Value Proposition Canvas is a strategic management tool that allows businesses to understand and communicate the value they provide to their customers. In the context of this project, we've adapted this concept to the realm of artificial intelligence. With the AI Value Proposition Canvas, users can visualize and craft the unique value their AI solution offers. It aids in identifying key components such as customer segments, customer jobs, gains, pains, products, and pain relievers. By leveraging this canvas, you can effectively align your AI solution with the needs and expectations of your target audience.This project also integrates Streamlit, a popular open-source Python library, to create a seamless user interface. Streamlit enables the interactive and dynamic display of the AI Value Proposition Canvas, making it user-friendly and accessible for both AI enthusiasts and business professionals.Explore and utilize this AI Value Proposition Canvas to propel your AI projects forward, ensuring that your AI solution meets the precise demands of your audience."""
+    )
+
 
 # Constumer Segment
 ############################################################################################################
@@ -543,3 +548,29 @@ if selected == "Value Proposition":
             st.error(
                 "Introduce at least 3 pain relievers that help the client resolve their frustrations"
             )
+if selected == "Check engagment":
+    st.subheader("Check engagment()")
+    st.markdown(
+        "Sorry but this feature is not available now, but when it is ready it will be great! You imagine?! 🤯"
+    )
+    st.image(
+        "https://openclipart.org/image/400px/301360",
+        use_column_width=True,
+    )
+
+if selected == "Contact":
+    st.subheader("Contact")
+
+    st.write("Feel free to reach out to me via:")
+
+    # LinkedIn
+    st.divider()
+    st.write("[LinkedIn](https://www.linkedin.com/in/sosarodrigo/)")
+
+    # GitHub
+    st.divider()
+    st.write("[GitHub](https://github.com/sosarodrigox)")
+
+    # Email
+    st.divider()
+    st.write("sosarodrigox@gmail.com")
