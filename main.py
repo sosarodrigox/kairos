@@ -116,9 +116,9 @@ if selected == "Constumer Segment":
                 options=["To-The-Point", "Concise", "Detailed"],
             )
             if output_size == "To-The-Point":
-                out_token = 100
+                out_token = 200
             elif output_size == "Concise":
-                out_token = 250
+                out_token = 350
             else:
                 out_token = 500
 
@@ -186,9 +186,9 @@ if selected == "Constumer Segment":
                 options=["To-The-Point", "Concise", "Detailed"],
             )
             if output_size == "To-The-Point":
-                out_token = 100
+                out_token = 200
             elif output_size == "Concise":
-                out_token = 250
+                out_token = 350
             else:
                 out_token = 500
 
@@ -260,9 +260,9 @@ if selected == "Constumer Segment":
                 options=["To-The-Point", "Concise", "Detailed"],
             )
             if output_size == "To-The-Point":
-                out_token = 100
+                out_token = 200
             elif output_size == "Concise":
-                out_token = 250
+                out_token = 350
             else:
                 out_token = 500
 
@@ -355,9 +355,9 @@ if selected == "Value Proposition":
                 options=["To-The-Point", "Concise", "Detailed"],
             )
             if output_size == "To-The-Point":
-                out_token = 100
+                out_token = 200
             elif output_size == "Concise":
-                out_token = 250
+                out_token = 350
             else:
                 out_token = 500
 
@@ -423,9 +423,9 @@ if selected == "Value Proposition":
                 options=["To-The-Point", "Concise", "Detailed"],
             )
             if output_size == "To-The-Point":
-                out_token = 100
+                out_token = 200
             elif output_size == "Concise":
-                out_token = 250
+                out_token = 350
             else:
                 out_token = 500
 
@@ -495,9 +495,9 @@ if selected == "Value Proposition":
                 options=["To-The-Point", "Concise", "Detailed"],
             )
             if output_size == "To-The-Point":
-                out_token = 100
+                out_token = 200
             elif output_size == "Concise":
-                out_token = 250
+                out_token = 350
             else:
                 out_token = 500
 
