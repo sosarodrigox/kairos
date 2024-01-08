@@ -44,7 +44,7 @@ def ai_review(
     )
     print("prompt_edit: " + prompt_edit + "// out_token: " + str(out_token) + ".")
     review = openai.Completion.create(
-        engine="text-davinci-003",
+        engine="gpt-3.5-turbo-instruct",
         prompt=prompt_edit,
         max_tokens=out_token,
         temperature=temp,
