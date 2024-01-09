@@ -21,6 +21,23 @@ openai.api_key = api_key
 canvas_section: str
 canvas_section_area: str
 
+# # Define estado inicial.
+# if "customer_jobs" not in st.session_state:
+#     st.session_state.costumer_jobs = ""
+
+
+def list_changed(canvas_section, canvas_section_area, list_input):
+    if "listas" not in st.session_state:
+        st.session_state.listas = []
+
+    st.session_state.listas.append(
+        {
+            "canvas section": canvas_section,
+            "area": canvas_section_area,
+            "list": list_input,
+        }
+    )
+
 
 def ai_review(
     canvas_section,
@@ -35,13 +52,15 @@ def ai_review(
     temp,
 ):
     prompt_edit = (
-        f"As a business professional focusing on the {canvas_section} and {canvas_section_area} in the Business Value Proposition Canvas by Alexander Osterwalder, I have compiled the following list of {canvas_section_area}: {list_input}. "
-        f"My understanding of the business context is as follows: "
-        f"I have {business_knowledge.lower()} knowledge of the business domain, and the business is currently at the {business_stage.lower()} stage. "
-        f"I am seeking feedback on this list to refine and optimize the value proposition canvas. "
-        f"I would appreciate your {output_review.lower()} feedback about this {canvas_section_area} list and any suggestions to improve. Consider mentioning the most critical {canvas_section_area} for the {business_area.lower()} area. "
-        f"Please, send me your comments {output_size.lower()} and keep your response to a maximum of {round(out_token/4)} words."
+        f'I am an entrepreneur and I am creating a value proposition canvas using Alexander Osterwalder\'s methodology. Now I am working in the {canvas_section} and within it in the {canvas_section_area} area, identify the following information: "{list_input}".'
+        f" Here's the context of the business: "
+        f"I possess {business_knowledge.lower()} knowledge in this domain, and the business currently stands at the {business_stage.lower()} stage. "
+        f"I'm seeking a review of this information to refine and optimize the value proposition canvas of my business."
+        f'If the information provided: "{list_input}", seems unclear or doesn\'t align with the business context, please alert me before offering suggestions. '
+        f"I welcome your {output_review.lower()} feedback on this {canvas_section_area} information and any suggestions for improvement. Please highlight the most critical {canvas_section_area} for the {business_area.lower()} sector. "
+        f"Please provide your comments in a {output_size.lower()} manner, keeping your response concise, within a maximum of {round(out_token/4)} words."
     )
+
     print("prompt_edit: " + prompt_edit + "// out_token: " + str(out_token) + ".")
     review = openai.Completion.create(
         engine="gpt-3.5-turbo-instruct",
@@ -76,7 +95,7 @@ with st.sidebar:
     )
     st.subheader("Business context")
     business_area = st.selectbox(
-        "Business knowledge:",
+        "Business area:",
         (
             "Technology",
             "Healthcare",
@@ -354,3 +373,26 @@ if selected == "Contact":
     # Email
     st.divider()
     st.write("sosarodrigox@gmail.com")
+
+    st.write(
+        """
+        ## 💯 Counter
+        
+        The most basic example: Store a count in `st.session_state` and increment when 
+        clicked.
+        """
+    )
+
+    if "counter" not in st.session_state:
+        st.session_state.counter = 0
+
+    def increment():
+        st.session_state.counter += 1
+
+    st.write("Counter:", st.session_state.counter)
+    st.button("Plus one!", on_click=increment)
+
+    if st.session_state.counter >= 50:
+        st.success("King of counting there! Your trophy for reaching 50: 🏆")
+    elif st.session_state.counter >= 10:
+        st.warning("You made it to 10! Keep going to win a prize 🎈")
