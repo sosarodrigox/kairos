@@ -31,9 +31,26 @@ canvas_section_area: str
 #         }
 #     )
 
-# Verifica si 'gains_input' existe en st.session_state, si no existe, inicialízalo como str vacío
+# Session states: Verifico si existe información en los input, si no existe, lo inicio con un string vacío
 if "gains_input" not in st.session_state:
     st.session_state["gains_input"] = ""
+
+if "jobs_input" not in st.session_state:
+    st.session_state["jobs_input"] = ""
+
+if "pains_input" not in st.session_state:
+    st.session_state["pains_input"] = ""
+
+if "gain_creators_input" not in st.session_state:
+    st.session_state["gain_creators_input"] = ""
+
+if "prod_serv_input" not in st.session_state:
+    st.session_state["prod_serv_input"] = ""
+
+if "pain_relievers_input" not in st.session_state:
+    st.session_state["pain_relievers_input"] = ""
+
+# Muestra los valores ingresados por el usuario hasta el momento
 st.write(st.session_state)
 
 
@@ -160,7 +177,14 @@ if selected == "Constumer Segment":
         st.subheader("Constumer Gains:")
         st.text("The benefits or positive outcomes that customers seek or expect.")
 
-        gains_input = st.text_area("Enter at least 3 expected gains or benefits:")
+        gains_input = st.text_area(
+            "Enter at least 3 expected gains or benefits:",
+            value=st.session_state["gains_input"],
+        )
+        if gains_input:
+            st.session_state["gains_input"] = gains_input
+        st.write("Gains inputs:", st.session_state["gains_input"])
+
         list_input = gains_input
 
     if menu_costumer_segment == "Jobs":
@@ -169,8 +193,13 @@ if selected == "Constumer Segment":
         st.text("The tasks or problems that customers are trying to perform or solve.")
 
         jobs_input = st.text_area(
-            "Enter at least 3 jobs or tasks that the client needs to solve:"
+            "Enter at least 3 jobs or tasks that the client needs to solve:",
+            value=st.session_state["jobs_input"],
         )
+        if jobs_input:
+            st.session_state["jobs_input"] = jobs_input
+        st.write("Jobs inputs:", st.session_state["jobs_input"])
+
         list_input = jobs_input
 
     if menu_costumer_segment == "Pains":
@@ -181,8 +210,14 @@ if selected == "Constumer Segment":
         )
 
         pains_input = st.text_area(
-            "Enter at least 3 pains or frustrations that the customer needs to resolve:"
+            "Enter at least 3 pains or frustrations that the customer needs to resolve:",
+            value=st.session_state["pains_input"],
         )
+
+        if pains_input:
+            st.session_state["pains_input"] = pains_input
+        st.write("Pains inputs:", st.session_state["pains_input"])
+
         list_input = pains_input
 
     st.subheader("AI Review:")
@@ -192,7 +227,7 @@ if selected == "Constumer Segment":
     with col1:
         output_size = st.radio(
             label="What kind of answer do you want?",
-            options=["To-The-Point", "Concise", "Detailed"],
+            options=["Detailed", "Concise", "To-The-Point"],
         )
         if output_size == "To-The-Point":
             out_token = 200
@@ -269,7 +304,15 @@ if selected == "Value Proposition":
             "Enhancing value by delivering benefits and positive outcomes for customers."
         )
 
-        gain_creators_input = st.text_area("Enter at least 3 gain creators:")
+        gain_creators_input = st.text_area(
+            "Enter at least 3 gain creators:",
+            value=st.session_state["gain_creators_input"],
+        )
+
+        if gain_creators_input:
+            st.session_state["gain_creators_input"] = gain_creators_input
+        st.write("Gain Creators inputs:", st.session_state["gain_creators_input"])
+
         list_input = gain_creators_input
 
     if menu_value_proposition == "Products & Services":
@@ -277,7 +320,15 @@ if selected == "Value Proposition":
         st.subheader("Products & Services:")
         st.text("The products and services that create value for the customer.")
 
-        prod_serv_input = st.text_area("Enter at least 3 products or services:")
+        prod_serv_input = st.text_area(
+            "Enter at least 3 products or services:",
+            value=st.session_state["prod_serv_input"],
+        )
+
+        if prod_serv_input:
+            st.session_state["prod_serv_input"] = prod_serv_input
+        st.write("Products & Services inputs:", st.session_state["prod_serv_input"])
+
         list_input = prod_serv_input
 
     if menu_value_proposition == "Pain Relievers":
@@ -288,8 +339,14 @@ if selected == "Value Proposition":
         )
 
         pain_relievers_input = st.text_area(
-            "Introduce at least 3 pain relievers that help the client resolve their frustrations:"
+            "Introduce at least 3 pain relievers that help the client resolve their frustrations:",
+            value=st.session_state["pain_relievers_input"],
         )
+
+        if pain_relievers_input:
+            st.session_state["pain_relievers_input"] = pain_relievers_input
+        st.write("Pain Relievers inputs:", st.session_state["pain_relievers_input"])
+
         list_input = pain_relievers_input
 
     st.subheader("AI Review:")
@@ -299,7 +356,7 @@ if selected == "Value Proposition":
     with col1:
         output_size = st.radio(
             label="What kind of answer do you want?",
-            options=["To-The-Point", "Concise", "Detailed"],
+            options=["Detailed", "Concise", "To-The-Point"],
         )
         if output_size == "To-The-Point":
             out_token = 200
@@ -371,26 +428,3 @@ if selected == "Contact":
     # Email
     st.divider()
     st.write("sosarodrigox@gmail.com")
-
-    st.write(
-        """
-        ## 💯 Counter
-        
-        The most basic example: Store a count in `st.session_state` and increment when 
-        clicked.
-        """
-    )
-
-    if "counter" not in st.session_state:
-        st.session_state.counter = 0
-
-    def increment():
-        st.session_state.counter += 1
-
-    st.write("Counter:", st.session_state.counter)
-    st.button("Plus one!", on_click=increment)
-
-    if st.session_state.counter >= 50:
-        st.success("King of counting there! Your trophy for reaching 50: 🏆")
-    elif st.session_state.counter >= 10:
-        st.warning("You made it to 10! Keep going to win a prize 🎈")
