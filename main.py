@@ -4,8 +4,6 @@ import os
 from dotenv import load_dotenv
 from streamlit_option_menu import option_menu
 
-# from streamlit_tags import st_tags
-
 # Cargar las variables de entorno desde .env
 load_dotenv()
 
@@ -21,22 +19,22 @@ openai.api_key = api_key
 canvas_section: str
 canvas_section_area: str
 
-# # Define estado inicial.
-# if "customer_jobs" not in st.session_state:
-#     st.session_state.costumer_jobs = ""
+# def list_changed(canvas_section, canvas_section_area, list_input):
+#     if "listas" not in st.session_state:
+#         st.session_state.listas = []
 
+#     st.session_state.listas.append(
+#         {
+#             "canvas section": canvas_section,
+#             "area": canvas_section_area,
+#             "list": list_input,
+#         }
+#     )
 
-def list_changed(canvas_section, canvas_section_area, list_input):
-    if "listas" not in st.session_state:
-        st.session_state.listas = []
-
-    st.session_state.listas.append(
-        {
-            "canvas section": canvas_section,
-            "area": canvas_section_area,
-            "list": list_input,
-        }
-    )
+# Verifica si 'gains_input' existe en st.session_state, si no existe, inicialízalo como str vacío
+if "gains_input" not in st.session_state:
+    st.session_state["gains_input"] = ""
+st.write(st.session_state)
 
 
 def ai_review(
