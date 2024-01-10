@@ -19,18 +19,6 @@ openai.api_key = api_key
 canvas_section: str
 canvas_section_area: str
 
-# def list_changed(canvas_section, canvas_section_area, list_input):
-#     if "listas" not in st.session_state:
-#         st.session_state.listas = []
-
-#     st.session_state.listas.append(
-#         {
-#             "canvas section": canvas_section,
-#             "area": canvas_section_area,
-#             "list": list_input,
-#         }
-#     )
-
 # Session states: Verifico si existe información en los input, si no existe, lo inicio con un string vacío
 if "gains_input" not in st.session_state:
     st.session_state["gains_input"] = ""
@@ -49,9 +37,6 @@ if "prod_serv_input" not in st.session_state:
 
 if "pain_relievers_input" not in st.session_state:
     st.session_state["pain_relievers_input"] = ""
-
-# Muestra los valores ingresados por el usuario hasta el momento
-st.write(st.session_state)
 
 
 def ai_review(
@@ -73,10 +58,11 @@ def ai_review(
         f"I'm seeking a review of this information to refine and optimize the value proposition canvas of my business."
         f'If the information provided: "{list_input}", seems unclear or doesn\'t align with the business context, please alert me before offering suggestions. '
         f"I welcome your {output_review.lower()} feedback on this {canvas_section_area} information and any suggestions for improvement. Please highlight the most critical {canvas_section_area} for the {business_area.lower()} sector. "
-        f"Please provide your comments in a {output_size.lower()} manner, keeping your response concise, within a maximum of {round(out_token/4)} words."
+        f"Please provide your comments in a {output_size.lower()} manner, keeping your response within a maximum of {round(out_token/4)} words."
     )
 
     print("prompt_edit: " + prompt_edit + "// out_token: " + str(out_token) + ".")
+
     review = openai.Completion.create(
         engine="gpt-3.5-turbo-instruct",
         prompt=prompt_edit,
@@ -86,6 +72,35 @@ def ai_review(
     print(review)
 
     return review["choices"][0]["text"]
+
+
+def check_engagment(state_data):
+    prompt_evaluate = (
+        f"I am an entrepreneur and I am creating a value proposition canvas using Alexander Osterwalder's methodology. My business area is {business_area.lower()} and I am currently in the {business_stage.lower()} stage. "
+        f"I need a review of this information to refine and optimize my business value proposition canvas. "
+        f"In the value proposition section I wrote: "
+        f"Products and services: {state_data['prod_serv_input']}. "
+        f"Pain relievers: {state_data['pain_relievers_input']}. "
+        f"Gain creators: {state_data['gain_creators_input']}. "
+        f"In the customer segment section I wrote: "
+        f"Customer jobs: {state_data['jobs_input']}. "
+        f"Customer pains: {state_data['pains_input']}. "
+        f"Customer gains: {state_data['gains_input']}. "
+        f"If the information provided does not seem clear or does not align with the commercial context of my business, please let me know before giving me suggestions. "
+        f"Otherwise give me feedback about my value proposition canvas and any suggestions for improvement. Highlights the most important aspects for the {business_area.lower()} sector. Please be detailed in your response, keeping it within a maximum of 300 words. "
+    )
+
+    print(f"prompt_evaluate: {prompt_evaluate}.")
+
+    evaluation = openai.Completion.create(
+        engine="gpt-3.5-turbo-instruct",
+        prompt=prompt_evaluate,
+        max_tokens=1000,
+        temperature=0.2,
+        # stop="\n\n", VER ESTO PARA QUE ES?
+    )
+
+    return evaluation["choices"][0]["text"]
 
 
 with st.sidebar:
@@ -122,6 +137,7 @@ with st.sidebar:
             "Transportation",
             "Fashion",
             "Manufacturing",
+            "Forniture",
         ),
     )
     business_knowledge = st.selectbox(
@@ -143,7 +159,7 @@ if selected == "What is?":
         use_column_width=True,
     )
     st.markdown(
-        """The AI Value Proposition Canvas is a powerful tool designed to assist in the creation and deployment of AI solutions. Drawing inspiration from the renowned Value Proposition Canvas by Alex Osterwalder, this specialized framework focuses on harnessing the potential of artificial intelligence. The Value Proposition Canvas is a strategic management tool that allows businesses to understand and communicate the value they provide to their customers. In the context of this project, we've adapted this concept to the realm of artificial intelligence. With the AI Value Proposition Canvas, users can visualize and craft the unique value their AI solution offers. It aids in identifying key components such as customer segments, customer jobs, gains, pains, products, and pain relievers. By leveraging this canvas, you can effectively align your AI solution with the needs and expectations of your target audience.This project also integrates Streamlit, a popular open-source Python library, to create a seamless user interface. Streamlit enables the interactive and dynamic display of the AI Value Proposition Canvas, making it user-friendly and accessible for both AI enthusiasts and business professionals.Explore and utilize this AI Value Proposition Canvas to propel your AI projects forward, ensuring that your AI solution meets the precise demands of your audience."""
+        """The AI Value Proposition Canvas is a powerful tool designed to assist in creating a value proposition canvas. This project combines Alex Osterwalder's VPC methodology and takes advantage of the potential of artificial intelligence as an assistant at every step. The Value Proposition Canvas is a strategic management tool that allows companies to understand and communicate the value they offer to their customers. With AI Value Proposition Canvas, users are assisted in how to create value for their customers. It helps identify key components such as customer gains, customer jobs, pains relievers, products and gains creators. This tool helps to effectively align your solution with the needs and expectations of your target audience. Once you have completed the value proposition and customer segment sections, use the check engagement function to get helpful tips from your value proposition canvas."""
     )
 
 
@@ -183,7 +199,6 @@ if selected == "Constumer Segment":
         )
         if gains_input:
             st.session_state["gains_input"] = gains_input
-        st.write("Gains inputs:", st.session_state["gains_input"])
 
         list_input = gains_input
 
@@ -198,7 +213,6 @@ if selected == "Constumer Segment":
         )
         if jobs_input:
             st.session_state["jobs_input"] = jobs_input
-        st.write("Jobs inputs:", st.session_state["jobs_input"])
 
         list_input = jobs_input
 
@@ -216,7 +230,6 @@ if selected == "Constumer Segment":
 
         if pains_input:
             st.session_state["pains_input"] = pains_input
-        st.write("Pains inputs:", st.session_state["pains_input"])
 
         list_input = pains_input
 
@@ -311,7 +324,6 @@ if selected == "Value Proposition":
 
         if gain_creators_input:
             st.session_state["gain_creators_input"] = gain_creators_input
-        st.write("Gain Creators inputs:", st.session_state["gain_creators_input"])
 
         list_input = gain_creators_input
 
@@ -327,7 +339,6 @@ if selected == "Value Proposition":
 
         if prod_serv_input:
             st.session_state["prod_serv_input"] = prod_serv_input
-        st.write("Products & Services inputs:", st.session_state["prod_serv_input"])
 
         list_input = prod_serv_input
 
@@ -345,7 +356,6 @@ if selected == "Value Proposition":
 
         if pain_relievers_input:
             st.session_state["pain_relievers_input"] = pain_relievers_input
-        st.write("Pain Relievers inputs:", st.session_state["pain_relievers_input"])
 
         list_input = pain_relievers_input
 
@@ -403,14 +413,33 @@ if selected == "Value Proposition":
 # Check engagment: Soon
 ############################################################################################################
 if selected == "Check engagment":
-    st.subheader("Check engagment()")
+    st.subheader("Check engagment (Beta version)")
     st.markdown(
-        "Sorry but this feature is not available now, but when it is ready it will be great! You imagine?! 🤯"
+        """“Engagement” refers to how sections of the canvas interact to create a strong value proposition. For example, the connection between "Customer Jobs" and "Pain Relievers" involves how products solve customer needs. The relationship between "Gains" and "Gain Creators" shows how the benefits offered match customer expectations. Effective engagement involves coherence and synergy between these areas to address customer needs and expectations, thus creating a comprehensive value proposition."""
     )
     st.image(
-        "https://openclipart.org/image/400px/301360",
+        "https://optimatraining.co.uk/wp-content/uploads/Value-Proposition-Canvas.png",
         use_column_width=True,
     )
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("Value Proposition", divider="gray")
+        st.write(f"Products and services: {st.session_state['prod_serv_input']}")
+        st.write(f"Pain relievers: {st.session_state['pain_relievers_input']}")
+        st.write(f"Gain creators: {st.session_state['gain_creators_input']}")
+
+    with col2:
+        st.subheader("Costumer Segment", divider="gray")
+        st.write(f"Customer jobs: {st.session_state['jobs_input']}")
+        st.write(f"Customer pains: {st.session_state['pains_input']}")
+        st.write(f"Customer gains: {st.session_state['gains_input']}")
+
+    if st.button("Check engagment", type="primary"):
+        with st.spinner("Wait for it..."):
+            st.info(check_engagment(state_data=st.session_state))
+
+        st.success("Done!")
 
 if selected == "Contact":
     st.subheader("Contact")
