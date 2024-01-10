@@ -38,6 +38,12 @@ if "prod_serv_input" not in st.session_state:
 if "pain_relievers_input" not in st.session_state:
     st.session_state["pain_relievers_input"] = ""
 
+if "business_description_input" not in st.session_state:
+    st.session_state["business_description_input"] = ""
+
+# # Show the state of the session to testing:
+# st.write(st.session_state)
+
 
 def ai_review(
     canvas_section,
@@ -52,11 +58,12 @@ def ai_review(
     temp,
 ):
     prompt_edit = (
-        f'I am an entrepreneur and I am creating a value proposition canvas using Alexander Osterwalder\'s methodology. Now I am working in the {canvas_section} and within it in the {canvas_section_area} area, identify the following information: "{list_input}".'
-        f" Here's the context of the business: "
-        f"I possess {business_knowledge.lower()} knowledge in this domain, and the business currently stands at the {business_stage.lower()} stage. "
-        f"I'm seeking a review of this information to refine and optimize the value proposition canvas of my business."
-        f'If the information provided: "{list_input}", seems unclear or doesn\'t align with the business context, please alert me before offering suggestions. '
+        f"I am an entrepreneur and I am creating a value proposition canvas using Alexander Osterwalder's methodology. "
+        f"Here's the context of the business: {business_description_input}. "
+        f'Now I am working in the {canvas_section} and within it in the {canvas_section_area} area and identify the following information: "{list_input}". '
+        f"The business currently stands at the {business_stage.lower()} stage. "
+        f"I'm seeking a review of this information to refine and optimize the value proposition canvas of my business. "
+        f"If the information provided above seems unclear or does not align with my business context, do not be afraid to tell me before offering suggestions, explain to me what to correct considering that I have {business_knowledge.lower()} knowledge of the business. "
         f"I welcome your {output_review.lower()} feedback on this {canvas_section_area} information and any suggestions for improvement. Please highlight the most critical {canvas_section_area} for the {business_area.lower()} sector. "
         f"Please provide your comments in a {output_size.lower()} manner, keeping your response within a maximum of {round(out_token/4)} words."
     )
@@ -97,7 +104,7 @@ def check_engagment(state_data):
         prompt=prompt_evaluate,
         max_tokens=1000,
         temperature=0.2,
-        # stop="\n\n", VER ESTO PARA QUE ES?
+        stop="\n\n",
     )
 
     return evaluation["choices"][0]["text"]
@@ -124,6 +131,14 @@ with st.sidebar:
         default_index=0,
     )
     st.subheader("Business context")
+
+    business_description_input = st.text_area(
+        "Brief description of the business:",
+        value=st.session_state["business_description_input"],
+    )
+    if business_description_input:
+        st.session_state["business_description_input"] = business_description_input
+
     business_area = st.selectbox(
         "Business area:",
         (
@@ -161,7 +176,6 @@ if selected == "What is?":
     st.markdown(
         """The AI Value Proposition Canvas is a powerful tool designed to assist in creating a value proposition canvas. This project combines Alex Osterwalder's VPC methodology and takes advantage of the potential of artificial intelligence as an assistant at every step. The Value Proposition Canvas is a strategic management tool that allows companies to understand and communicate the value they offer to their customers. With AI Value Proposition Canvas, users are assisted in how to create value for their customers. It helps identify key components such as customer gains, customer jobs, pains relievers, products and gains creators. This tool helps to effectively align your solution with the needs and expectations of your target audience. Once you have completed the value proposition and customer segment sections, use the check engagement function to get helpful tips from your value proposition canvas."""
     )
-
 
 # Constumer Segment
 ############################################################################################################
@@ -262,7 +276,14 @@ if selected == "Constumer Segment":
         step=0.2,
     )
 
-    if len(list_input) > 10:
+    if (
+        st.session_state["business_description_input"] == ""
+        or len(business_description_input) < 20
+    ):
+        st.error("Enter a brief description of the business in the lateral menu")
+    elif len(list_input) < 10:
+        st.error(f"Enter at least 3 {canvas_section_area}")
+    else:
         if st.button("Review with AI", type="primary"):
             with st.spinner("Wait for it..."):
                 st.info(
@@ -281,8 +302,6 @@ if selected == "Constumer Segment":
                 )
 
             st.success("Done!")
-    else:
-        st.error(f"Enter at least 3 {canvas_section_area}")
 
 
 # Value Proposition Segment
@@ -388,7 +407,14 @@ if selected == "Value Proposition":
         step=0.2,
     )
 
-    if len(list_input) > 10:
+    if (
+        st.session_state["business_description_input"] == ""
+        or len(business_description_input) < 20
+    ):
+        st.error("Enter a brief description of the business in the lateral menu")
+    elif len(list_input) < 10:
+        st.error(f"Enter at least 3 {canvas_section_area}")
+    else:
         if st.button("Review with AI", type="primary"):
             with st.spinner("Wait for it..."):
                 st.info(
@@ -407,8 +433,6 @@ if selected == "Value Proposition":
                 )
 
             st.success("Done!")
-    else:
-        st.error(f"Enter at least 3 {canvas_section_area}")
 
 # Check engagment: Soon
 ############################################################################################################
