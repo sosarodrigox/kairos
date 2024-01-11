@@ -81,7 +81,7 @@ def ai_review(
     return review["choices"][0]["text"]
 
 
-def check_fit(state_data):
+def check_fit(state_data, temp):
     prompt_evaluate = (
         f"I am an entrepreneur and I am creating a value proposition canvas using Alexander Osterwalder's methodology. My business area is {business_area.lower()} and I am currently in the {business_stage.lower()} stage. "
         f"I need you to review the information I have collected from my business to refine and optimize my business value proposition canvas. "
@@ -95,6 +95,7 @@ def check_fit(state_data):
         f"Customer gains: {state_data['gains_input']}. "
         f"If the information provided does not seem clear or does not align with the commercial context of my business, please do not be afraid to let me know before giving me suggestions. "
         f"Otherwise, focus on giving me an evaluation on the fit between my value proposition and the customer segment I am targeting. I accept any suggestion for improvement or constructive criticism. Highlights the most important aspects for the {business_area.lower()} sector. Please be detailed in your response, keeping it within a maximum of 300 words."
+        f"Start the message with a rating based on your evaluation, the options you can use are: Confusing, Unclear, Needs development, Appropriate, Innovative, Very innovative, Excellent work, Challenging, Creative, Very creative."
     )
 
     print(f"prompt_evaluate: {prompt_evaluate}.")
@@ -103,7 +104,7 @@ def check_fit(state_data):
         engine="gpt-3.5-turbo-instruct",
         prompt=prompt_evaluate,
         max_tokens=1000,
-        temperature=0.2,
+        temperature=temp,
     )
 
     print(evaluation)
@@ -111,32 +112,39 @@ def check_fit(state_data):
     return evaluation["choices"][0]["text"]
 
 
-def ad_libs(state_data):
+def ad_libs(state_data, temp, business_area: str, business_stage: str):
     prompt_ad_libs = (
-        f"I am an entrepreneur and I am creating a value proposition canvas using Alexander Osterwalder's methodology. My business area is {business_area.lower()} and I am currently in the {business_stage.lower()} stage. "
-        f"I need a review of this information to refine and optimize my business value proposition canvas. "
-        f"In the value proposition section I wrote: "
-        f"Products and services: {state_data['prod_serv_input']}. "
-        f"Pain relievers: {state_data['pain_relievers_input']}. "
-        f"Gain creators: {state_data['gain_creators_input']}. "
-        f"In the customer segment section I wrote: "
-        f"Customer jobs: {state_data['jobs_input']}. "
-        f"Customer pains: {state_data['pains_input']}. "
-        f"Customer gains: {state_data['gains_input']}. "
-        f"If the information provided does not seem clear or does not align with the commercial context of my business, please let me know before giving me suggestions. "
-        f"Otherwise give me feedback about my value proposition canvas and any suggestions for improvement. Highlights the most important aspects for the {business_area.lower()} sector. Please be detailed in your response, keeping it within a maximum of 300 words. "
+        f"I am an entrepreneur and have created a value proposition canvas using Alexander Osterwalder's methodology. "
+        f"My business area is {business_area} and I am currently in the {business_stage} stage. "
+        f"I need you to help me create a phrase that summarizes my value proposition in one sentence using the Ad-libs methodology. "
+        f"An Ad-libs forces you to indicate exactly how you plan to create value for your customers. To do this, you must fill in the spaces in the following sentence:\n\n"
+        f"Our(s) (Products and services) help(n) (to the Customer segment) "
+        f"what they want (Costumer Jobs) for (the verb you choose. Example: Reduce, avoid frustration, etc.) and (the verb you choose. Example: increase, allow, etc) and add the Costumer Gains. "
+        f"\n\nNow, review the information I have collected:\n"
+        f"Here's the context of the business: {business_description_input}.\n "
+        f"* Value Proposition Section:\n"
+        f"- Products and services: {state_data['prod_serv_input']}.\n"
+        f"- Analgesics: {state_data['pain_relievers_input']}.\n"
+        f"- Profit creators: {state_data['gain_creators_input']}.\n"
+        f"* Customers Segment Section:\n"
+        f"- Customers Jobs: {state_data['jobs_input']}.\n"
+        f"- Customers Pains: {state_data['pains_input']}.\n"
+        f"- Customers Gains: {state_data['gains_input']}.\n\n"
+        f"If the information provided does not seem clear or does not align with the commercial context of my business, please do not be afraid to let me know before giving me suggestions. "
+        f"If not, summarize all the information in my value proposition into one sentence that I can use to appeal to my customer segment in my area of business. "
+        f"Please be concise in your response, keeping it to a maximum of 100 words."
     )
 
     print(f"prompt_evaluate: {prompt_ad_libs}.")
 
-    evaluation = openai.Completion.create(
-        engine="davinci",
+    ad_libs_result = openai.Completion.create(
+        engine="gpt-3.5-turbo-instruct",
         prompt=prompt_ad_libs,
         max_tokens=1000,
-        temperature=0.2,
+        temperature=temp,
     )
-
-    return evaluation["choices"][0]["text"]
+    print(ad_libs_result)
+    return ad_libs_result["choices"][0]["text"]
 
 
 with st.sidebar:
@@ -511,11 +519,33 @@ if selected == "Check VPC Fit":
         st.write(f"Customer pains: {st.session_state['pains_input']}")
         st.write(f"Customer gains: {st.session_state['gains_input']}")
 
+    st.divider()
+    temp = st.slider(
+        "Randomness or creativity of the text generated",
+        min_value=0.0,
+        max_value=1.0,
+        step=0.2,
+    )
+    # st.divider()
     if st.button("Check Value Proposition Fit", type="primary"):
         with st.spinner("Wait for it..."):
-            st.info(check_fit(state_data=st.session_state))
+            st.info(check_fit(state_data=st.session_state, temp=temp))
 
         st.success("Done!")
+
+    if st.button("Generate Ad-libs (Beta Version)", type="primary"):
+        with st.spinner("Wait for it..."):
+            st.subheader(
+                ad_libs(
+                    state_data=st.session_state,
+                    temp=temp,
+                    business_area=business_area,
+                    business_stage=business_stage,
+                )
+            )
+
+        st.success("Done!")
+
 
 if selected == "Contact":
     st.subheader("Contact")
