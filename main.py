@@ -174,7 +174,29 @@ if selected == "What is?":
         use_column_width=True,
     )
     st.markdown(
-        """The AI Value Proposition Canvas is a powerful tool designed to assist in creating a value proposition canvas. This project combines Alex Osterwalder's VPC methodology and takes advantage of the potential of artificial intelligence as an assistant at every step. The Value Proposition Canvas is a strategic management tool that allows companies to understand and communicate the value they offer to their customers. With AI Value Proposition Canvas, users are assisted in how to create value for their customers. It helps identify key components such as customer gains, customer jobs, pains relievers, products and gains creators. This tool helps to effectively align your solution with the needs and expectations of your target audience. Once you have completed the value proposition and customer segment sections, use the check engagement function to get helpful tips from your value proposition canvas."""
+        """The AI Value Proposition Canvas seamlessly integrates Alex Osterwalder's VPC methodology with the power of artificial intelligence, serving as a dynamic assistant throughout the canvas creation process. This strategic management tool empowers businesses to comprehend and convey the value they provide to their customers. With the AI Value Proposition Canvas, users receive guided support in crafting value for their customers, identifying key components like customer gains, jobs, pain relievers, products, and gain creators. Effectively align your solution with the needs and expectations of your target audience. After completing the value proposition and customer segment sections, leverage the "Check Engagement" function for insightful tips based on your canvas."""
+    )
+    st.subheader("How to Use:")
+    st.markdown(
+        """1. **Start in the Sidebar: "Business Context" Section**
+   - Describe your business briefly in the "Brief Description of the Business" text box, using at least 10 words to outline your current idea or business.
+
+2. **Configure Your Business Context in the Sidebar**
+   - Choose your "Business Area," indicate your "Business Knowledge," and select the appropriate "Business Stage" for your current business situation.
+
+3. **Navigate to "Customer Segment" or "Value Proposition" in the Sidebar**
+   - In each section, find a brief description and a horizontal menu with its three respective areas (e.g., "Gains," "Jobs," and "Pains" for Customer Segment).
+   
+4. **Complete Each Area**
+   - Use the text box in each area to input information relevant to your business. It's recommended to add at least three points for more comprehensive feedback.
+
+5. **Utilize "AI Review" Controls**
+   - Specify the type of response you desire using the "AI Review" controls. Choose between a detailed, concise, or to-the-point answer. You can receive constructive or destructive feedback on your list. Adjust creativity expectations with the slider.
+
+6. **Proceed to "Check Engagement" in the Sidebar**
+   - Once you've filled all areas in "Customer Segment" and "Value Proposition," go to the "Check Engagement" section in the Sidebar. A summary of your value proposition canvas will be displayed. Click "Check Engagement" to receive an overall evaluation of your business.
+
+That's it! This user-friendly guide ensures a smooth and effective experience with the AI Value Proposition Canvas."""
     )
 
 # Constumer Segment
