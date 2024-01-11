@@ -81,8 +81,38 @@ def ai_review(
     return review["choices"][0]["text"]
 
 
-def check_engagment(state_data):
+def check_fit(state_data):
     prompt_evaluate = (
+        f"I am an entrepreneur and I am creating a value proposition canvas using Alexander Osterwalder's methodology. My business area is {business_area.lower()} and I am currently in the {business_stage.lower()} stage. "
+        f"I need you to review the information I have collected from my business to refine and optimize my business value proposition canvas. "
+        f"In the value proposition section I wrote: "
+        f"Products and services: {state_data['prod_serv_input']}. "
+        f"Pain relievers: {state_data['pain_relievers_input']}. "
+        f"Gain creators: {state_data['gain_creators_input']}. "
+        f"In the customer segment section I wrote: "
+        f"Customer jobs: {state_data['jobs_input']}. "
+        f"Customer pains: {state_data['pains_input']}. "
+        f"Customer gains: {state_data['gains_input']}. "
+        f"If the information provided does not seem clear or does not align with the commercial context of my business, please do not be afraid to let me know before giving me suggestions. "
+        f"Otherwise, focus on giving me an evaluation on the fit between my value proposition and the customer segment I am targeting. I accept any suggestion for improvement or constructive criticism. Highlights the most important aspects for the {business_area.lower()} sector. Please be detailed in your response, keeping it within a maximum of 300 words."
+    )
+
+    print(f"prompt_evaluate: {prompt_evaluate}.")
+
+    evaluation = openai.Completion.create(
+        engine="gpt-3.5-turbo-instruct",
+        prompt=prompt_evaluate,
+        max_tokens=1000,
+        temperature=0.2,
+    )
+
+    print(evaluation)
+
+    return evaluation["choices"][0]["text"]
+
+
+def ad_libs(state_data):
+    prompt_ad_libs = (
         f"I am an entrepreneur and I am creating a value proposition canvas using Alexander Osterwalder's methodology. My business area is {business_area.lower()} and I am currently in the {business_stage.lower()} stage. "
         f"I need a review of this information to refine and optimize my business value proposition canvas. "
         f"In the value proposition section I wrote: "
@@ -97,14 +127,13 @@ def check_engagment(state_data):
         f"Otherwise give me feedback about my value proposition canvas and any suggestions for improvement. Highlights the most important aspects for the {business_area.lower()} sector. Please be detailed in your response, keeping it within a maximum of 300 words. "
     )
 
-    print(f"prompt_evaluate: {prompt_evaluate}.")
+    print(f"prompt_evaluate: {prompt_ad_libs}.")
 
     evaluation = openai.Completion.create(
-        engine="gpt-3.5-turbo-instruct",
-        prompt=prompt_evaluate,
+        engine="davinci",
+        prompt=prompt_ad_libs,
         max_tokens=1000,
         temperature=0.2,
-        stop="\n\n",
     )
 
     return evaluation["choices"][0]["text"]
@@ -118,7 +147,7 @@ with st.sidebar:
             "What is?",
             "Constumer Segment",
             "Value Proposition",
-            "Check engagment",
+            "Check VPC Fit",
             "Contact",
         ],
         icons=[
@@ -174,12 +203,13 @@ if selected == "What is?":
         use_column_width=True,
     )
     st.markdown(
-        """The AI Value Proposition Canvas seamlessly integrates Alex Osterwalder's VPC methodology with the power of artificial intelligence, serving as a dynamic assistant throughout the canvas creation process. This strategic management tool empowers businesses to comprehend and convey the value they provide to their customers. With the AI Value Proposition Canvas, users receive guided support in crafting value for their customers, identifying key components like customer gains, jobs, pain relievers, products, and gain creators. Effectively align your solution with the needs and expectations of your target audience. After completing the value proposition and customer segment sections, leverage the "Check Engagement" function for insightful tips based on your canvas."""
+        """The AI Value Proposition Canvas seamlessly integrates Alex Osterwalder's VPC methodology with the power of artificial intelligence, serving as a dynamic assistant throughout the canvas creation process. This strategic management tool empowers businesses to comprehend and convey the value they provide to their customers. With the AI Value Proposition Canvas, users receive guided support in crafting value for their customers, identifying key components like customer gains, jobs, pain relievers, products, and gain creators. Effectively align your solution with the needs and expectations of your target audience. After completing the value proposition and customer segment sections, leverage the "Check Value Proposition Fit" function for insightful tips based on your canvas."""
     )
     st.subheader("How to Use:")
     st.markdown(
         """1. **Start in the Sidebar: "Business Context" Section**
    - Describe your business briefly in the "Brief Description of the Business" text box, using at least 10 words to outline your current idea or business.
+
 
 2. **Configure Your Business Context in the Sidebar**
    - Choose your "Business Area," indicate your "Business Knowledge," and select the appropriate "Business Stage" for your current business situation.
@@ -193,8 +223,8 @@ if selected == "What is?":
 5. **Utilize "AI Review" Controls**
    - Specify the type of response you desire using the "AI Review" controls. Choose between a detailed, concise, or to-the-point answer. You can receive constructive or destructive feedback on your list. Adjust creativity expectations with the slider.
 
-6. **Proceed to "Check Engagement" in the Sidebar**
-   - Once you've filled all areas in "Customer Segment" and "Value Proposition," go to the "Check Engagement" section in the Sidebar. A summary of your value proposition canvas will be displayed. Click "Check Engagement" to receive an overall evaluation of your business.
+6. **Proceed to "Check Value Proposition Fit" in the Sidebar**
+   - Once you've filled all areas in "Customer Segment" and "Value Proposition," go to the "Check VPC Fit" section in the Sidebar. A summary of your value proposition canvas will be displayed. Click the "Check Value Proposition Fit" button to receive an overall evaluation of your business. The AI Value Proposition Canvas will provide feedback on the fit between your value proposition and customer segment. You can also receive suggestions for improvement and constructive criticism.
 
 That's it! This user-friendly guide ensures a smooth and effective experience with the AI Value Proposition Canvas."""
     )
@@ -456,12 +486,12 @@ if selected == "Value Proposition":
 
             st.success("Done!")
 
-# Check engagment: Soon
+# Check Value Proposition Fit:
 ############################################################################################################
-if selected == "Check engagment":
-    st.subheader("Check engagment (Beta version)")
+if selected == "Check VPC Fit":
+    st.subheader("Check Value Proposition Fit")
     st.markdown(
-        """“Engagement” refers to how sections of the canvas interact to create a strong value proposition. For example, the connection between "Customer Jobs" and "Pain Relievers" involves how products solve customer needs. The relationship between "Gains" and "Gain Creators" shows how the benefits offered match customer expectations. Effective engagement involves coherence and synergy between these areas to address customer needs and expectations, thus creating a comprehensive value proposition."""
+        """“Value Proposition Fit” refers to how sections of the canvas interact to create a strong value proposition. For example, the connection between "Customer Jobs" and "Pain Relievers" involves how products solve customer needs. The relationship between "Gains" and "Gain Creators" shows how the benefits offered match customer expectations. An effective fit involves coherence and synergy between these areas to address customer needs and expectations, thus creating a comprehensive value proposition."""
     )
     st.image(
         "https://optimatraining.co.uk/wp-content/uploads/Value-Proposition-Canvas.png",
@@ -481,9 +511,9 @@ if selected == "Check engagment":
         st.write(f"Customer pains: {st.session_state['pains_input']}")
         st.write(f"Customer gains: {st.session_state['gains_input']}")
 
-    if st.button("Check engagment", type="primary"):
+    if st.button("Check Value Proposition Fit", type="primary"):
         with st.spinner("Wait for it..."):
-            st.info(check_engagment(state_data=st.session_state))
+            st.info(check_fit(state_data=st.session_state))
 
         st.success("Done!")
 
